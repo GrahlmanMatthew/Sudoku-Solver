@@ -95,10 +95,12 @@ def main() -> None:
 
         _advance_solver(state)
 
+        now = time.monotonic()
+        ref = state._paused_at if state._paused_at is not None else now
         stats = RenderStats(
             cells_placed=state.cells_placed,
             backtracks=state.backtracks,
-            elapsed_seconds=time.monotonic() - state.start_time - state._paused_duration,
+            elapsed_seconds=ref - state.start_time - state._paused_duration,
             difficulty=state.difficulty,
             steps_per_second=state.steps_per_second,
             paused=state.paused,
