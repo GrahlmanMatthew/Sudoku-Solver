@@ -25,7 +25,7 @@ A valid Sudoku puzzle is generated fresh each run using a two-phase algorithm:
    a uniqueness check (limited backtracking that exits after finding a second solution)
    verifies the puzzle still has exactly one answer. A cell is kept if removing it would
    break uniqueness. Difficulty controls the target clue count: Easy (~47), Medium (~40),
-   Hard (~31), Evil (~23).
+   Hard (~31).
 
 The solver is a Python **generator function** — it yields one `SolverStep` after every
 cell placement or backtrack. The Pygame game loop calls `next()` on the generator each
@@ -93,15 +93,4 @@ python -m sudoku_solver --difficulty hard
 ```bash
 uv run pytest -v
 uv run pytest --cov=sudoku_solver --cov-report=term-missing -v
-```
-
----
-
-## Pre-commit setup (first time after cloning)
-
-```bash
-pip install pre-commit
-pre-commit install
-pre-commit install --hook-type commit-msg
-detect-secrets scan > .secrets.baseline
 ```
