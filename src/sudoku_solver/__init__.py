@@ -1,0 +1,1 @@
+"""Animated backtracking Sudoku solver."""
