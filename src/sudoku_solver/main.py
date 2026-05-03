@@ -56,6 +56,8 @@ class AppState:
     cells_placed: int = 0
     backtracks: int = 0
     start_time: float = field(default_factory=time.monotonic)
+    _paused_at: float | None = None
+    _paused_duration: float = 0.0
     steps_per_second: int = STEPS_PER_SECOND_DEFAULT
     _step_accumulator: float = 0.0
     highlight_cell: tuple[int, int] | None = None
@@ -96,7 +98,7 @@ def main() -> None:
         stats = RenderStats(
             cells_placed=state.cells_placed,
             backtracks=state.backtracks,
-            elapsed_seconds=time.monotonic() - state.start_time,
+            elapsed_seconds=time.monotonic() - state.start_time - state._paused_duration,
             difficulty=state.difficulty,
             steps_per_second=state.steps_per_second,
             paused=state.paused,
@@ -148,7 +150,14 @@ def _handle_events(events: list[pygame.event.Event], state: AppState) -> bool:
             return False
 
         if event.key == pygame.K_SPACE:
-            state.paused = not state.paused
+            if not state.paused:
+                state.paused = True
+                state._paused_at = time.monotonic()
+            else:
+                state.paused = False
+                if state._paused_at is not None:
+                    state._paused_duration += time.monotonic() - state._paused_at
+                    state._paused_at = None
 
         elif event.key == pygame.K_RIGHT and state.paused and not state.solved:
             _step_once(state)
@@ -183,6 +192,8 @@ def _reset_session(state: AppState, difficulty: str) -> None:
     state.cells_placed = 0
     state.backtracks = 0
     state.start_time = time.monotonic()
+    state._paused_at = None
+    state._paused_duration = 0.0
     state._step_accumulator = 0.0
     state.highlight_cell = None
     state.highlight_kind = None
