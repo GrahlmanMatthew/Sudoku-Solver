@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sudoku-solver"
+version = "0.1.0"
+description = "Animated backtracking Sudoku solver with Pygame"
+requires-python = ">=3.12"
+dependencies = [
+  "pygame>=2.5",
+]
+
+[project.scripts]
+sudoku-solver = "sudoku_solver.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sudoku_solver"]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "ruff>=0.5",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
